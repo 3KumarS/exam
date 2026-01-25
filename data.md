@@ -46,6 +46,18 @@ int main()
     return 0;
 }
 
+o/p
+>>
+Enter number of elements: 3
+Enter elements:
+1
+3
+2
+Sorted array:
+1 2 3 
+
+=== Code Execution Successful ===
+
 -------------------
 ii. Insertion Sort
 >>
@@ -86,6 +98,18 @@ int main() {
 
     return 0;
 }
+
+o/p
+>>
+Enter number of elements: 3
+Enter elements:
+5
+2
+8
+Sorted array:
+2 5 8 
+
+=== Code Execution Successful ===
 
 ----------------------
 2. Implementation of Searching Techniques
@@ -185,6 +209,18 @@ int main() {
 
     return 0;
 }
+
+o/p
+>>
+Enter number of elements: 3
+Enter sorted elements:
+2
+4
+6
+Enter element to search: 2
+Element found at position 1
+
+=== Code Execution Successful ===
 
 ---------------
 3. Implement program for Modulo Division as hashing method.
