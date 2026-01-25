@@ -256,3 +256,364 @@ Hash Table:
 
 
 === Code Execution Successful ===
+
+--------
+4. Implementation of Singly Linked List
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* next;
+};
+
+Node* head = NULL;
+
+void insert(int x) {
+    Node* temp = new Node();
+    temp->data = x;
+    temp->next = head;
+    head = temp;
+}
+
+void display() {
+    Node* temp = head;
+    while(temp != NULL) {
+        cout << temp->data << " -> ";
+        temp = temp->next;
+    }
+    cout << "NULL";
+}
+
+int main() {
+    insert(10);
+    insert(20);
+    insert(30);
+    display();
+    return 0;
+}
+
+o/p
+>>
+30 -> 20 -> 10 -> NULL
+
+=== Code Execution Successful ===
+
+----------------
+5. Stack Implementation using Array
+>>
+#include <iostream>
+using namespace std;
+
+#define SIZE 5
+int stack[SIZE];
+int top = -1;
+
+void push(int x) {
+    if(top == SIZE - 1)
+        cout << "Stack Overflow\n";
+    else {
+        top++;
+        stack[top] = x;
+    }
+}
+
+void pop() {
+    if(top == -1)
+        cout << "Stack Underflow\n";
+    else {
+        cout << "Popped: " << stack[top] << endl;
+        top--;
+    }
+}
+
+int main() {
+    push(10);
+    push(20);
+    push(30);
+    pop();
+    pop();
+    return 0;
+}
+
+o/p
+>>
+Popped: 30
+Popped: 20
+
+
+=== Code Execution Successful ===
+
+-------------------------------
+6(a). Postfix Evaluation using Stack
+#include <iostream>
+#include <stack>
+using namespace std;
+
+int main() {
+    stack<int> s;
+    string exp = "23*54*+";
+
+    for(char ch : exp) {
+        if(isdigit(ch))
+            s.push(ch - '0');
+        else {
+            int b = s.top(); s.pop();
+            int a = s.top(); s.pop();
+
+            switch(ch) {
+                case '+': s.push(a + b); break;
+                case '-': s.push(a - b); break;
+                case '*': s.push(a * b); break;
+                case '/': s.push(a / b); break;
+            }
+        }
+    }
+    cout << "Result: " << s.top();
+    return 0;
+}
+
+o/p
+>>
+Result: 26
+
+=== Code Execution Successful ===
+
+-----------------------
+7. Linear Queue using Array
+>>
+#include <iostream>
+using namespace std;
+
+#define SIZE 5
+int queue[SIZE];
+int front = -1, rear = -1;
+
+void enqueue(int x) {
+    if(rear == SIZE - 1)
+        cout << "Queue Overflow\n";
+    else {
+        if(front == -1) front = 0;
+        queue[++rear] = x;
+    }
+}
+
+void dequeue() {
+    if(front == -1 || front > rear)
+        cout << "Queue Underflow\n";
+    else
+        cout << "Deleted: " << queue[front++] << endl;
+}
+
+int main() {
+    enqueue(10);
+    enqueue(20);
+    enqueue(30);
+    dequeue();
+    dequeue();
+    return 0;
+}
+
+o/p
+>>
+Deleted: 10
+Deleted: 20
+
+
+=== Code Execution Successful ===
+
+---------------------
+8. Binary Search Tree + Traversals
+>>
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+};
+
+Node* insert(Node* root, int x) {
+    if(root == NULL) {
+        root = new Node();
+        root->data = x;
+        root->left = root->right = NULL;
+    }
+    else if(x < root->data)
+        root->left = insert(root->left, x);
+    else
+        root->right = insert(root->right, x);
+
+    return root;
+}
+
+// Inorder Traversal
+void inorder(Node* root) {
+    if(root != NULL) {
+        inorder(root->left);
+        cout << root->data << " ";
+        inorder(root->right);
+    }
+}
+
+int main() {
+    Node* root = NULL;
+    root = insert(root, 50);
+    insert(root, 30);
+    insert(root, 70);
+    insert(root, 20);
+    insert(root, 40);
+
+    cout << "Inorder Traversal: ";
+    inorder(root);
+    return 0;
+}
+
+o/p
+>>
+
+Inorder Traversal: 20 30 40 50 70 
+
+=== Code Execution Successful ===
+
+----------------------------
+9(a). DFS – Depth First Search
+>>
+#include <iostream>
+using namespace std;
+
+int graph[5][5] = {
+    {0,1,1,0,0},
+    {1,0,0,1,0},
+    {1,0,0,1,1},
+    {0,1,1,0,1},
+    {0,0,1,1,0}
+};
+
+bool visited[5];
+
+void DFS(int v) {
+    cout << v << " ";
+    visited[v] = true;
+
+    for(int i=0; i<5; i++) {
+        if(graph[v][i] && !visited[i])
+            DFS(i);
+    }
+}
+
+int main() {
+    DFS(0);
+    return 0;
+}
+
+o/p
+>>
+0 1 3 2 4 
+
+=== Code Execution Successful ===
+
+
+-----------
+
+9(b). BFS – Breadth First Search
+>>
+#include <iostream>
+#include <queue>
+using namespace std;
+
+int graph[5][5] = {
+    {0,1,1,0,0},
+    {1,0,0,1,0},
+    {1,0,0,1,1},
+    {0,1,1,0,1},
+    {0,0,1,1,0}
+};
+
+int main() {
+    bool visited[5] = {false};
+    queue<int> q;
+
+    q.push(0);
+    visited[0] = true;
+
+    while(!q.empty()) {
+        int v = q.front(); q.pop();
+        cout << v << " ";
+
+        for(int i=0;i<5;i++) {
+            if(graph[v][i] && !visited[i]) {
+                visited[i] = true;
+                q.push(i);
+            }
+        }
+    }
+    return 0;
+}
+
+o/p
+>>
+0 1 2 3 4 
+
+=== Code Execution Successful ===
+
+
+-----------------------------------
+
+
+10. Minimum Spanning Tree – Kruskal’s Algorithm
+>>
+#include <iostream>
+using namespace std;
+
+struct Edge {
+    int u, v, w;
+};
+
+int parent[10];
+
+int find(int i) {
+    while(parent[i] != i)
+        i = parent[i];
+    return i;
+}
+
+void unite(int x, int y) {
+    parent[x] = y;
+}
+
+int main() {
+    Edge edges[5] = {
+        {0,1,10},
+        {0,2,6},
+        {0,3,5},
+        {1,3,15},
+        {2,3,4}
+    };
+
+    for(int i=0;i<4;i++)
+        parent[i] = i;
+
+    cout << "Edges in MST:\n";
+    for(int i=0;i<5;i++) {
+        int x = find(edges[i].u);
+        int y = find(edges[i].v);
+
+        if(x != y) {
+            cout << edges[i].u << " - " << edges[i].v << " : " << edges[i].w << endl;
+            unite(x, y);
+        }
+    }
+    return 0;
+}
+
+o/p
+>>
+Edges in MST:
+0 - 1 : 10
+0 - 2 : 6
+0 - 3 : 5
+
+
+=== Code Execution Successful ===
