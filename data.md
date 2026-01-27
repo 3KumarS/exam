@@ -673,3 +673,6 @@ public class DemoApplication {
         System.out.println("Hello, This is a Simple Spring Boot Application");
     }
 }
+
+Output Console
+Hello, This is a Simple Spring Boot Application
