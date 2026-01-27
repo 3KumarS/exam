@@ -1,655 +1,415 @@
-1. Implementation of Sorting Techniques
+Experiment–1
+Aim:To demonstrate the use of Wildcard in Java Generics.
 
-i. Bubble Sort
-ii. Insertion Sort
+code:
 
-----------------
-i. Bubble Sort
->>
-#include <iostream>
-using namespace std;
+import java.util.*;
 
-int main()
-{
-    int n;
-    int a[50];
+class WildcardDemo {
 
-    cout << "Enter number of elements: ";
-    cin >> n;
-
-    cout << "Enter elements:\n";
-    for(int i = 0; i < n; i++)
-    {
-        cin >> a[i];
-    }
-
-    // Bubble Sort
-    for(int i = 0; i < n-1; i++)
-    {
-        for(int j = 0; j < n-1-i; j++)
-        {
-            if(a[j] > a[j+1])
-            {
-                int temp = a[j];
-                a[j] = a[j+1];
-                a[j+1] = temp;
-            }
+    // 1. Unbounded Wildcard
+    static void showList(List<?> list) {
+        for (Object o : list) {
+            System.out.println(o);
         }
     }
 
-    cout << "Sorted array:\n";
-    for(int i = 0; i < n; i++)
-    {
-        cout << a[i] << " ";
+    // 2. Upper Bounded Wildcard
+    static void showNumbers(List<? extends Number> list) {
+        for (Number n : list) {
+            System.out.println(n);
+        }
     }
 
-    return 0;
+    // 3. Lower Bounded Wildcard
+    static void addNumbers(List<? super Integer> list) {
+        list.add(10);
+        list.add(20);
+    }
+
+    public static void main(String[] args) {
+
+        List<Integer> intList = new ArrayList<>();
+        intList.add(1);
+        intList.add(2);
+
+        List<Double> doubleList = new ArrayList<>();
+        doubleList.add(10.5);
+        doubleList.add(20.5);
+
+        List<Number> numList = new ArrayList<>();
+
+        showList(intList);        // <?>
+        showNumbers(doubleList); // <? extends>
+        addNumbers(numList);      // <? super>
+
+        System.out.println(numList);
+    }
 }
 
-o/p
->>
-Enter number of elements: 3
-Enter elements:
+
+Output:
+
 1
-3
 2
-Sorted array:
-1 2 3 
+10.5
+20.5
+[10, 20]
 
-=== Code Execution Successful ===
+-----------------
+Experiment–2 
 
--------------------
-ii. Insertion Sort
->>
-#include <iostream>
-using namespace std;
+Aim : To write a Java program to create a List of items and use ListIterator to print the elements in forward and backward direction.
 
-int main() {
-    int n;
-    cout << "Enter number of elements: ";
-    cin >> n;
+Code:
 
-    if(n > 50) {
-        cout << "Maximum allowed size is 50";
-        return 0;
-    }
+import java.util.*;
 
-    int a[50];
-    cout << "Enter elements:\n";
-    for(int i = 0; i < n; i++)
-        cin >> a[i];
+class ListIteratorDemo {
 
-    // Insertion Sort Logic
-    for(int i = 1; i < n; i++) {
-        int key = a[i];
-        int j = i - 1;
+    public static void main(String[] args) {
 
-        while(j >= 0 && a[j] > key) {
-            a[j + 1] = a[j];
-            j--;
+        List<String> list = new ArrayList<>();
+
+        list.add("Java");
+        list.add("MCA");
+        list.add("Generics");
+        list.add("Spring");
+
+        // ListIterator
+        ListIterator<String> itr = list.listIterator();
+
+        System.out.println("Forward Direction:");
+        while (itr.hasNext()) {
+            System.out.println(itr.next());
         }
 
-        a[j + 1] = key;
+        System.out.println("\nBackward Direction:");
+        while (itr.hasPrevious()) {
+            System.out.println(itr.previous());
+        }
     }
-
-    cout << "Sorted array:\n";
-    for(int i = 0; i < n; i++)
-        cout << a[i] << " ";
-
-    return 0;
 }
 
-o/p
->>
-Enter number of elements: 3
-Enter elements:
-5
-2
-8
-Sorted array:
-2 5 8 
+Output:
 
-=== Code Execution Successful ===
+Forward Direction:
+Java
+MCA
+Generics
+Spring
+
+Backward Direction:
+Spring
+Generics
+MCA
+Java
 
 ----------------------
-2. Implementation of Searching Techniques
 
-i. Linear Search
-ii. Binary Search
------------------
-i. Linear Search
->>
-#include <iostream>
-using namespace std;
+Experiment–3
+Write a Java program to create a Set containing list of items of type String and print the items in the list using Iterator interface. Also print the list in reverse / backward direction.
 
-int main() {
-    int n, key;
-    int a[50];
+Code:
 
-    cout << "Enter number of elements: ";
-    cin >> n;
+import java.util.*;
 
-    cout << "Enter elements:\n";
-    for(int i = 0; i < n; i++)
-        cin >> a[i];
+class SetIteratorDemo {
 
-    cout << "Enter element to search: ";
-    cin >> key;
+    public static void main(String[] args) {
 
-    int flag = 0;
+        Set<String> set = new HashSet<>();
 
-    for(int i = 0; i < n; i++) {
-        if(a[i] == key) {
-            cout << "Element found at position " << i + 1;
-            flag = 1;
-            break;
+        set.add("Java");
+        set.add("MCA");
+        set.add("Spring");
+        set.add("Generics");
+
+        // Forward direction using Iterator
+        System.out.println("Forward Direction:");
+        Iterator<String> itr = set.iterator();
+
+        while (itr.hasNext()) {
+            System.out.println(itr.next());
+        }
+
+        // Convert Set to List for reverse traversal
+        List<String> list = new ArrayList<>(set);
+        ListIterator<String> listItr = list.listIterator(list.size());
+
+        // Backward direction
+        System.out.println("\nBackward Direction:");
+        while (listItr.hasPrevious()) {
+            System.out.println(listItr.previous());
         }
     }
-
-    if(flag == 0)
-        cout << "Element not found";
-
-    return 0;
 }
 
 
+OutPut:
 
-o/p→
+Forward Direction:
+Java
+MCA
+Spring
+Generics
 
-Enter number of elements: 2
-Enter elements:
-1
-2
-Enter element to search: 2
-Element found at position 2
+Backward Direction:
+Generics
+Spring
+MCA
+Java
 
-=== Code Execution Successful ===
+--------------------
 
----------------------
- Binary Search
- >>
-#include <iostream>
-using namespace std;
+Experiment–4
 
-int main() {
-    int n, key;
-    int a[50];
+Write a Java program using Map interface containing list of items having keys and associated values and perform the following operations:
+a) Add items in the map
+b) Remove items from the map
+c) Search specific key from the map
 
-    cout << "Enter number of elements: ";
-    cin >> n;
+Code:
 
-    cout << "Enter sorted elements:\n";
-    for(int i = 0; i < n; i++)
-        cin >> a[i];
+import java.util.*;
 
-    cout << "Enter element to search: ";
-    cin >> key;
+class MapDemo {
 
-    int low = 0, high = n - 1, mid;
-    int flag = 0;
+    public static void main(String[] args) {
 
-    while(low <= high) {
-        mid = (low + high) / 2;
+        Map<Integer, String> map = new HashMap<>();
 
-        if(a[mid] == key) {
-            cout << "Element found at position " << mid + 1;
-            flag = 1;
-            break;
-        }
-        else if(key < a[mid]) {
-            high = mid - 1;
-        }
-        else {
-            low = mid + 1;
-        }
-    }
+        // a) Add items
+        map.put(101, "Ram");
+        map.put(102, "Shyam");
+        map.put(103, "Mohan");
 
-    if(flag == 0)
-        cout << "Element not found";
+        System.out.println("Map Elements:");
+        System.out.println(map);
 
-    return 0;
-}
+        // b) Remove item
+        map.remove(102);
 
-o/p
->>
-Enter number of elements: 3
-Enter sorted elements:
-2
-4
-6
-Enter element to search: 2
-Element found at position 1
+        System.out.println("\nAfter Removing Key 102:");
+        System.out.println(map);
 
-=== Code Execution Successful ===
-
----------------
-3. Implement program for Modulo Division as hashing method.
-
->>
-#include <iostream>
-using namespace std;
-
-#define SIZE 10     // Size of Hash Table
-
-int table[SIZE];    // Hash Table
-
-// Hash Function (Modulo Division)
-int hashFunction(int key)
-{
-    return key % SIZE;
-}
-
-int main()
-{
-    int key, index;
-
-    // Initialize hash table with -1 (empty)
-    for (int i = 0; i < SIZE; i++)
-        table[i] = -1;
-
-    cout << "Enter key to insert: ";
-    cin >> key;
-
-    index = hashFunction(key);
-
-    // Check for collision
-    if (table[index] == -1)
-    {
-        table[index] = key;
-        cout << "Key stored at index: " << index << endl;
-    }
-    else
-    {
-        cout << "Collision occurred at index: " << index << endl;
-    }
-
-    // Display Hash Table
-    cout << "\nHash Table:\n";
-    for (int i = 0; i < SIZE; i++)
-    {
-        cout << i << " -> " << table[i] << endl;
-    }
-
-    return 0;
-}
-
-o/p
-
-Enter key to insert: 1
-Key stored at index: 1
-
-Hash Table:
-0 -> -1
-1 -> 1
-2 -> -1
-3 -> -1
-4 -> -1
-5 -> -1
-6 -> -1
-7 -> -1
-8 -> -1
-9 -> -1
-
-
-=== Code Execution Successful ===
-
---------
-4. Implementation of Singly Linked List
-#include <iostream>
-using namespace std;
-
-struct Node {
-    int data;
-    Node* next;
-};
-
-Node* head = NULL;
-
-void insert(int x) {
-    Node* temp = new Node();
-    temp->data = x;
-    temp->next = head;
-    head = temp;
-}
-
-void display() {
-    Node* temp = head;
-    while(temp != NULL) {
-        cout << temp->data << " -> ";
-        temp = temp->next;
-    }
-    cout << "NULL";
-}
-
-int main() {
-    insert(10);
-    insert(20);
-    insert(30);
-    display();
-    return 0;
-}
-
-o/p
->>
-30 -> 20 -> 10 -> NULL
-
-=== Code Execution Successful ===
-
-----------------
-5. Stack Implementation using Array
->>
-#include <iostream>
-using namespace std;
-
-#define SIZE 5
-int stack[SIZE];
-int top = -1;
-
-void push(int x) {
-    if(top == SIZE - 1)
-        cout << "Stack Overflow\n";
-    else {
-        top++;
-        stack[top] = x;
-    }
-}
-
-void pop() {
-    if(top == -1)
-        cout << "Stack Underflow\n";
-    else {
-        cout << "Popped: " << stack[top] << endl;
-        top--;
-    }
-}
-
-int main() {
-    push(10);
-    push(20);
-    push(30);
-    pop();
-    pop();
-    return 0;
-}
-
-o/p
->>
-Popped: 30
-Popped: 20
-
-
-=== Code Execution Successful ===
-
--------------------------------
-6(a). Postfix Evaluation using Stack
-#include <iostream>
-#include <stack>
-using namespace std;
-
-int main() {
-    stack<int> s;
-    string exp = "23*54*+";
-
-    for(char ch : exp) {
-        if(isdigit(ch))
-            s.push(ch - '0');
-        else {
-            int b = s.top(); s.pop();
-            int a = s.top(); s.pop();
-
-            switch(ch) {
-                case '+': s.push(a + b); break;
-                case '-': s.push(a - b); break;
-                case '*': s.push(a * b); break;
-                case '/': s.push(a / b); break;
-            }
+        // c) Search specific key
+        int searchKey = 101;
+        if (map.containsKey(searchKey)) {
+            System.out.println("\nKey " + searchKey + " found. Value = " + map.get(searchKey));
+        } else {
+            System.out.println("\nKey not found");
         }
     }
-    cout << "Result: " << s.top();
-    return 0;
 }
 
-o/p
->>
-Result: 26
 
-=== Code Execution Successful ===
+Output :
+
+Map Elements:
+{101=Ram, 102=Shyam, 103=Mohan}
+
+After Removing Key 102:
+{101=Ram, 103=Mohan}
+
+Key 101 found. Value = Ram
+
+----------------------
+
+Experiment–5
+Write a Java program using Lambda Expression with multiple parameters to add two numbers.
+
+Code:
+
+interface Addable {
+    int add(int a, int b);
+}
+
+class LambdaDemo {
+
+    public static void main(String[] args) {
+
+        Addable obj = (a, b) -> a + b;
+
+        System.out.println("Addition = " + obj.add(10, 20));
+    }
+}
+
+
+
+
+Output:
+
+Sum = 30
 
 -----------------------
-7. Linear Queue using Array
->>
-#include <iostream>
-using namespace std;
 
-#define SIZE 5
-int queue[SIZE];
-int front = -1, rear = -1;
 
-void enqueue(int x) {
-    if(rear == SIZE - 1)
-        cout << "Queue Overflow\n";
-    else {
-        if(front == -1) front = 0;
-        queue[++rear] = x;
-    }
+Experiment–6
+Write a JSP page to display the Registration Form (Make your own assumptions)
+Code:
+
+<%@ page language="java" contentType="text/html" %>
+
+<html>
+<head>
+    <title>Registration Form</title>
+</head>
+<body>
+
+<h2>Student Registration</h2>
+
+<form action="success.jsp" method="post">
+
+    Name: <input type="text" name="name" /><br><br>
+
+    Email: <input type="email" name="email" /><br><br>
+
+    Password: <input type="password" name="password" /><br><br>
+
+    Course:
+    <select name="course">
+        <option>MCA</option>
+        <option>BCA</option>
+        <option>BSc</option>
+    </select><br><br>
+
+    Gender:
+    <input type="radio" name="gender" value="Male">Male
+    <input type="radio" name="gender" value="Female">Female<br><br>
+
+    <input type="submit" value="Register" />
+
+</form>
+
+</body>
+</html>
+
+Output:
+Student Registration
+Name → textbox
+
+
+Email → textbox
+
+
+Password → password field
+
+
+Course → dropdown (MCA, BCA, BSc)
+
+
+Gender → radio buttons (Male / Female)
+
+
+Register → submit button
+
+------------------------
+
+
+Experiment–7
+Write a JSP program to add, delete and display the records from StudentMaster
+ (RollNo, Name, Semester, Course) table.
+
+1️⃣ Database Table (Exam Assumption ✔️)
+CREATE TABLE StudentMaster (
+    RollNo INT PRIMARY KEY,
+    Name VARCHAR(50),
+    Semester INT,
+    Course VARCHAR(20)
+);
+
+2️⃣ JSP to INSERT record
+📄 insert.jsp
+
+
+<%@ page import="java.sql.*" %>
+
+<%
+int roll = Integer.parseInt(request.getParameter("roll"));
+String name = request.getParameter("name");
+int sem = Integer.parseInt(request.getParameter("sem"));
+String course = request.getParameter("course");
+
+Class.forName("com.mysql.jdbc.Driver");
+Connection con = DriverManager.getConnection(
+    "jdbc:mysql://localhost:3306/mca", "root", "root");
+
+PreparedStatement ps = con.prepareStatement(
+    "INSERT INTO StudentMaster VALUES(?,?,?,?)");
+
+ps.setInt(1, roll);
+ps.setString(2, name);
+ps.setInt(3, sem);
+ps.setString(4, course);
+
+ps.executeUpdate();
+
+out.println("Record Inserted Successfully");
+
+con.close();
+%>
+
+
+
+3️⃣ JSP to DISPLAY records
+📄 display.jsp
+
+<%@ page import="java.sql.*" %>
+
+<table border="1">
+<tr>
+    <th>Roll No</th>
+    <th>Name</th>
+    <th>Semester</th>
+    <th>Course</th>
+</tr>
+
+<%
+Class.forName("com.mysql.jdbc.Driver");
+Connection con = DriverManager.getConnection(
+    "jdbc:mysql://localhost:3306/mca", "root", "root");
+
+Statement st = con.createStatement();
+ResultSet rs = st.executeQuery("SELECT * FROM StudentMaster");
+
+while(rs.next()) {
+%>
+<tr>
+    <td><%= rs.getInt(1) %></td>
+    <td><%= rs.getString(2) %></td>
+    <td><%= rs.getInt(3) %></td>
+    <td><%= rs.getString(4) %></td>
+</tr>
+<%
 }
-
-void dequeue() {
-    if(front == -1 || front > rear)
-        cout << "Queue Underflow\n";
-    else
-        cout << "Deleted: " << queue[front++] << endl;
-}
-
-int main() {
-    enqueue(10);
-    enqueue(20);
-    enqueue(30);
-    dequeue();
-    dequeue();
-    return 0;
-}
-
-o/p
->>
-Deleted: 10
-Deleted: 20
+con.close();
+%>
+</table>
 
 
-=== Code Execution Successful ===
 
----------------------
-8. Binary Search Tree + Traversals
->>
-#include <iostream>
-using namespace std;
+4️⃣ JSP to DELETE record
+📄 delete.jsp
 
-struct Node {
-    int data;
-    Node* left;
-    Node* right;
-};
+<%@ page import="java.sql.*" %>
 
-Node* insert(Node* root, int x) {
-    if(root == NULL) {
-        root = new Node();
-        root->data = x;
-        root->left = root->right = NULL;
-    }
-    else if(x < root->data)
-        root->left = insert(root->left, x);
-    else
-        root->right = insert(root->right, x);
+<%
+int roll = Integer.parseInt(request.getParameter("roll"));
 
-    return root;
-}
+Class.forName("com.mysql.jdbc.Driver");
+Connection con = DriverManager.getConnection(
+    "jdbc:mysql://localhost:3306/mca", "root", "root");
 
-// Inorder Traversal
-void inorder(Node* root) {
-    if(root != NULL) {
-        inorder(root->left);
-        cout << root->data << " ";
-        inorder(root->right);
-    }
-}
+PreparedStatement ps =
+    con.prepareStatement("DELETE FROM StudentMaster WHERE RollNo=?");
 
-int main() {
-    Node* root = NULL;
-    root = insert(root, 50);
-    insert(root, 30);
-    insert(root, 70);
-    insert(root, 20);
-    insert(root, 40);
+ps.setInt(1, roll);
+ps.executeUpdate();
 
-    cout << "Inorder Traversal: ";
-    inorder(root);
-    return 0;
-}
+out.println("Record Deleted Successfully");
 
-o/p
->>
-
-Inorder Traversal: 20 30 40 50 70 
-
-=== Code Execution Successful ===
-
-----------------------------
-9(a). DFS – Depth First Search
->>
-#include <iostream>
-using namespace std;
-
-int graph[5][5] = {
-    {0,1,1,0,0},
-    {1,0,0,1,0},
-    {1,0,0,1,1},
-    {0,1,1,0,1},
-    {0,0,1,1,0}
-};
-
-bool visited[5];
-
-void DFS(int v) {
-    cout << v << " ";
-    visited[v] = true;
-
-    for(int i=0; i<5; i++) {
-        if(graph[v][i] && !visited[i])
-            DFS(i);
-    }
-}
-
-int main() {
-    DFS(0);
-    return 0;
-}
-
-o/p
->>
-0 1 3 2 4 
-
-=== Code Execution Successful ===
+con.close();
+%>
 
 
------------
-
-9(b). BFS – Breadth First Search
->>
-#include <iostream>
-#include <queue>
-using namespace std;
-
-int graph[5][5] = {
-    {0,1,1,0,0},
-    {1,0,0,1,0},
-    {1,0,0,1,1},
-    {0,1,1,0,1},
-    {0,0,1,1,0}
-};
-
-int main() {
-    bool visited[5] = {false};
-    queue<int> q;
-
-    q.push(0);
-    visited[0] = true;
-
-    while(!q.empty()) {
-        int v = q.front(); q.pop();
-        cout << v << " ";
-
-        for(int i=0;i<5;i++) {
-            if(graph[v][i] && !visited[i]) {
-                visited[i] = true;
-                q.push(i);
-            }
-        }
-    }
-    return 0;
-}
-
-o/p
->>
-0 1 2 3 4 
-
-=== Code Execution Successful ===
-
-
------------------------------------
-
-
-10. Minimum Spanning Tree – Kruskal’s Algorithm
->>
-#include <iostream>
-using namespace std;
-
-struct Edge {
-    int u, v, w;
-};
-
-int parent[10];
-
-int find(int i) {
-    while(parent[i] != i)
-        i = parent[i];
-    return i;
-}
-
-void unite(int x, int y) {
-    parent[x] = y;
-}
-
-int main() {
-    Edge edges[5] = {
-        {0,1,10},
-        {0,2,6},
-        {0,3,5},
-        {1,3,15},
-        {2,3,4}
-    };
-
-    for(int i=0;i<4;i++)
-        parent[i] = i;
-
-    cout << "Edges in MST:\n";
-    for(int i=0;i<5;i++) {
-        int x = find(edges[i].u);
-        int y = find(edges[i].v);
-
-        if(x != y) {
-            cout << edges[i].u << " - " << edges[i].v << " : " << edges[i].w << endl;
-            unite(x, y);
-        }
-    }
-    return 0;
-}
-
-o/p
->>
-Edges in MST:
-0 - 1 : 10
-0 - 2 : 6
-0 - 3 : 5
-
-
-=== Code Execution Successful ===
