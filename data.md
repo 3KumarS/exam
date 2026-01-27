@@ -411,5 +411,265 @@ out.println("Record Deleted Successfully");
 
 con.close();
 %>
+------------------------
+Experiment–8
+Write a program to print “Hello World” using Spring Framework.
+
+Step–1: Java Class (Bean)
+File Name--> Hello.java
+code:
+public class Hello {
+
+    public void sayHello() {
+        System.out.println("Hello World");
+    }
+}
+
+Step–2: Spring Configuration (XML)
+File Name--> applicationContext.xml
+code:
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="helloBean" class="Hello" />
+</beans>
+
+Step–3: Main Class (Run Program)
+File Name-->MainApp.java
+code:
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class MainApp {
+
+    public static void main(String[] args) {
+
+        ApplicationContext context =
+            new ClassPathXmlApplicationContext("applicationContext.xml");
+
+        Hello obj = (Hello) context.getBean("helloBean");
+        obj.sayHello();
+    }
+}
 
 
+output
+
+Hello World
+
+------------------------
+Experiment–9
+Write a program to demonstrate Autowiring in Spring Framework.
+Step–1: Dependent Class
+File Name-->Address.java
+code:
+public class Address {
+
+    public void showAddress() {
+        System.out.println("Address: New Delhi");
+    }
+}
+
+Step–2: Main Bean Class
+File Name-->Student.java
+code:
+public class Student {
+
+    private Address address;
+
+    // setter method
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public void display() {
+        System.out.println("Student Details");
+        address.showAddress();
+    }
+}
+
+Step–3: Spring XML (Autowiring)
+File Name-->applicationContext.xml
+code:
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="address" class="Address" />
+
+    <bean id="student" class="Student" autowire="byType" />
+
+</beans>
+
+Step–4: Main Class
+File Name-->MainApp.java
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class MainApp {
+
+    public static void main(String[] args) {
+
+        ApplicationContext context =
+            new ClassPathXmlApplicationContext("applicationContext.xml");
+
+        Student s = (Student) context.getBean("student");
+        s.display();
+    }
+}
+
+OutPut
+
+Student Details
+Address: New Delhi
+
+
+------------------------
+Experiment–10
+Write a program to demonstrate Spring AOP – Before Advice.
+
+Step–1: Business Class
+ File name->Bank.java
+code:
+public class Bank {
+
+    public void withdraw() {
+        System.out.println("Amount Withdrawn");
+    }
+}
+
+Step–2: Aspect (Before Advice)
+File name-->SecurityAspect.java
+code:
+public class SecurityAspect {
+
+    public void checkPin() {
+        System.out.println("PIN Verified");
+    }
+}
+Step–3: Spring AOP XML Config
+File Name-->applicationContext.xml
+code:
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="bank" class="Bank"/>
+    <bean id="security" class="SecurityAspect"/>
+
+    <aop:config>
+        <aop:aspect ref="security">
+            <aop:before method="checkPin"
+                pointcut="execution(* Bank.withdraw(..))"/>
+        </aop:aspect>
+    </aop:config>
+
+</beans>
+
+Step–4: Main Class
+File Name-->MainApp.java
+code:
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class MainApp {
+
+    public static void main(String[] args) {
+
+        ApplicationContext context =
+            new ClassPathXmlApplicationContext("applicationContext.xml");
+
+        Bank bank = (Bank) context.getBean("bank");
+        bank.withdraw();
+    }
+}
+
+Output
+
+PIN Verified
+Amount Withdrawn
+
+
+------------------------
+Experiment – 11
+Write a Java program to insert, update and delete records from the given table
+
+
+create table yourself like this 
+
+student(
+   id INT,
+   name VARCHAR(50),
+   course VARCHAR(30)
+)
+
+code:
+
+import java.sql.*;
+
+class JDBC_CRUD {
+
+    public static void main(String[] args) {
+
+        try {
+            // 1. Load Driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // 2. Create Connection
+            Connection con = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/testdb", "root", "password");
+
+            // INSERT
+            String insertSQL = "INSERT INTO student VALUES (1,'Amit','MCA')";
+            Statement st = con.createStatement();
+            st.executeUpdate(insertSQL);
+            System.out.println("Record Inserted");
+
+            // UPDATE
+            String updateSQL = "UPDATE student SET course='MBA' WHERE id=1";
+            st.executeUpdate(updateSQL);
+            System.out.println("Record Updated");
+
+            // DELETE
+            String deleteSQL = "DELETE FROM student WHERE id=1";
+            st.executeUpdate(deleteSQL);
+            System.out.println("Record Deleted");
+
+            // Close connection
+            con.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+}
+
+------------------------
+Experiment – 12
+Write a program to create a simple Spring Boot application that prints a message.
+code
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class DemoApplication {
+
+    public static void main(String[] args) {
+
+        SpringApplication.run(DemoApplication.class, args);
+
+        System.out.println("Hello, This is a Simple Spring Boot Application");
+    }
+}
