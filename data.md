@@ -675,4 +675,5 @@ public class DemoApplication {
 }
 
 Output Console
+
 Hello, This is a Simple Spring Boot Application
