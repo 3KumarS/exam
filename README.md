@@ -1,389 +1,192 @@
-Practical No. 1
-Aim: Implementation of Data partitioning through Range
+EXPERIMENT 2: HTML5 Page Creation
 
-CREATE DATABASE mca;
-USE mca;
+Code (index.html)
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My HTML5 Page</title>
+</head>
+<body>
 
-CREATE TABLE tr (
-id INT, name VARCHAR(50), purchased DATE
-)
-PARTITION BY RANGE( YEAR(purchased) ) (
-PARTITION p0 VALUES LESS THAN (1990), PARTITION p1 VALUES LESS THAN (1995), PARTITION p2 VALUES LESS THAN (2000), PARTITION p3 VALUES LESS THAN (2005), PARTITION p4 VALUES LESS THAN (2010), PARTITION p5 VALUES LESS THAN (2015)
-);
-INSERT INTO tr VALUES
-(1, 'desk organiser', '2003-10-15'), (2, 'alarm clock', '1997-11-05'), (3, 'chair', '2009-03-10'), (4, 'bookcase', '1989-01-10'), (5, 'exercise bike', '2014-05-09'), (6, 'sofa', '1987-06-05'), (7, 'espresso maker', '2011-11-22'), (8, 'aquarium', '1992-08-04'), (9, 'study desk', '2006-09-16'), (10, 'lava lamp', '1998-12-25');
+<h1>Welcome to My Website</h1>
+<p>This is a simple HTML5 page.</p>
 
-SELECT * FROM tr;
+<img src="https://via.placeholder.com/150" alt="Sample Image">
 
-SELECT* FROM tr PARTITION (p2);
+<h3>My Skills</h3>
+<ul>
+  <li>HTML</li>
+  <li>CSS</li>
+  <li>JavaScript</li>
+</ul>
 
-SELECT * FROM tr PARTITION (p5);
+<a href="https://www.google.com">Visit Google</a>
 
-SELECT* FROM tr PARTITION (p4);
+<h2>Contact Us</h2>
+<form>
+  Name: <input type="text"><br><br>
+  Email: <input type="email"><br><br>
+  Message:<br>
+  <textarea></textarea><br><br>
+  <input type="submit">
+</form>
 
-SELECT PARTITION_NAME, TABLE_ROWS FROM NFORMATION_SCHEMA.PARTITIONSWHERE TABLE_NAME='tr';
+</body>
+</html>
+---------------------------
+EXPERIMENT 3: Node.js FS Module (Read, Write, Close)
+Code (fs_demo.js)
+const fs = require('fs');
 
---------------------
-Practical No. 2
-Aim: Implementation of Analytical queries like Roll_UP, CUBE, First, Last.
+// Write file
+fs.writeFileSync('demo.txt', 'Hello MCA Student');
 
-1. ROLLUP: Aggregates data hierarchically. SELECT Region, Product, SUM(SalesAmount) AS TotalSales
-FROM Sales
-GROUP BY Region, Product WITH ROLLUP;
+// Read file
+const data = fs.readFileSync('demo.txt', 'utf8');
+console.log(data);
 
-2. CUBE: Generates all possible subtotal combinations. SELECT Region, Product, SUM(SalesAmount) AS TotalSales FROMSales GROUP BYRegion, Product
-UNION ALL
-SELECT Region, NULL AS Product, SUM(SalesAmount) AS TotalSales FROMSales
-GROUP BY Region
-UNION ALL
-SELECT NULL AS Region, Product, SUM(SalesAmount) AS TotalSales FROMSales
-GROUP BY Product
-UNION ALL
-SELECT NULL AS Region, NULL AS Product, SUM(SalesAmount) AS TotalSales FROMSales;
+// Open & close file
+const fd = fs.openSync('demo.txt', 'r');
+console.log("File opened");
+fs.closeSync(fd);
+console.log("File closed");
 
-3. FIRST_VALUE and LAST_VALUE: Retrieve the first or last value in a sorted
-partition.
-
-----------------------
-Practical No. 3
-Aim: Implementation of Abstract Data Type & Reference
-
-1. Customer Table
-CREATE TABLE Customer_reltab (
-CustNo INT NOT NULL, CustName VARCHAR(200) NOT NULL, Street VARCHAR(200) NOT NULL, City VARCHAR(200) NOT NULL, State CHAR(2) NOT NULL, Zip VARCHAR(20) NOT NULL, Phone1 VARCHAR(20), Phone2 VARCHAR(20), Phone3 VARCHAR(20), PRIMARY KEY (CustNo)
-);
-2. Purchase Order Table
-CREATE TABLE PurchaseOrder_reltab (
-PONo INT, Custno INT, OrderDate DATE, ShipDate DATE, ToStreet VARCHAR(200), ToCity VARCHAR(200), ToState CHAR(2), ToZip VARCHAR(20), PRIMARY KEY (PONo), FOREIGN KEY (Custno) REFERENCES Customer_reltab(CustNo)
-);
-
-3. Stock Table
-CREATE TABLE Stock_reltab (
-StockNo INT PRIMARY KEY, Price DECIMAL(10, 2), TaxRate DECIMAL(5, 2)
-);
-4. Line Items Table
-CREATE TABLE LineItems_reltab (
-LineItemNo INT, PONo INT, StockNo INT, Quantity INT, Discount DECIMAL(5, 2), PRIMARY KEY (PONo, LineItemNo), FOREIGN KEY (PONo) REFERENCES PurchaseOrder_reltab(PONo), FOREIGN KEY (StockNo) REFERENCES Stock_reltab(StockNo)
-);
-
-------------------------
-Practical No. 6
-Aim: Linear Regression 
-
-Code:
-import numpy as np
-class LinearRegression:
-def __init__(self):
-self.b0 = 0
-self.b1 = 0
-def fit(self, X, y):
-X_mean = np.mean(X)
-y_mean = np.mean(y)
-numerator, denomintor = 0, 0
-for i in range(len(X)):
-numerator += (X[i] - X_mean) * (y[i] - y_mean)
-denomintor += (X[i] - X_mean)**2
-self.b1 = numerator / denomintor
-self.b0 = y_mean - (X_mean * self.b1)
-return self.b0, self.b1
-def predict(self, X):
-y_hat = self.b0 + (self.b1 * X)
-return y_hat
-if __name__ == '__main__':
-X = np.array([173, 160, 154, 188, 168])
-X = X.reshape(5, 1)
-y = np.array([73, 65, 54, 80, 70])
-model = LinearRegression()
-b0, b1 = model.fit(X, y)
-print(b0, b1)
-y_pred = model.predict([165])
-print(y_pred)
-
-Output:
-[-50.99209602] [0.70813817]
-[65.85070258]
-
----------------------
-Practical No. 7
-Aim: Analysis of Regression
-
-Code:
-import numpy as np
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
-from sklearn.metrics import r2_score
-if __name__ == '__main__':
-X = np.array([173, 160, 154, 188, 168], ndmin=2)
-X = X.reshape(5, 1)
-y = np.array([73, 65, 54, 80, 70])
-model = LinearRegression()
-model.fit(X, y)
-y_hat = model.predict(X)
-print(y_hat)
-mse = mean_squared_error(y_true=y, y_pred=y_hat)
-print(f'Loss Calculated : {mse}')
-r2 = r2_score(y_true=y, y_pred=y_hat)
-print(f'Goodness of Fit : {r2}')
-
-Output:
-
-[71.51580796 62.31081171 58.06118267 82.13788056 67.9751171 ]
-Loss Calculated : 6.920550351288062
-Goodness of Fit : 0.9082641788005293
-
-----------------------
-Practical No. 8
-Aim: Logistic Regression
-
-Code:
-import numpy as np
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import log_loss
-from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_score
-if __name__ == '__main__':
-# Input features (reshaped to 2D array)
-X = np.array([6, 2, 5, 9, 1], ndmin=2)
-X = X.reshape(5, 1)
-# Target binary labels
-y = np.array([1, 0, 1, 1, 0])
-# Initialize and train the model
-model = LogisticRegression()
-model.fit(X, y)
-# Predict outcomes
-y_hat = model.predict(X)
-print(y_hat)
-# Calculate performance metrics
-loss = log_loss(y_true=y, y_pred=y_hat)
-print(f'Logarithimic Log : {loss}')
-cm = confusion_matrix(y_true=y, y_pred=y_hat)
-precision = precision_score(y_true=y, y_pred=y_hat)
-recall = recall_score(y_true=y, y_pred=y_hat)
-f1 = f1_score(y_true=y, y_pred=y_hat)
-# Display results
-print(f'Confusion Matrix : {cm}')
-[1 0 1 1 0]
-Logarithimic Log :
-2.220446049250313e-16
-Confusion Matrix : [[2 0]
-[0 3]]
-Precision : 1.0
-Recall : 1.0
-F1-Score : 1.0
-print(f'Precision : {precision}')
-print(f'Recall : {recall}')
-print(f'F1-Score : {f1}') 
-
-Output:
-
-[1 0 1 1 0]
-Logarithimic Log :
-2.220446049250313e-16
-Confusion Matrix : [[2 0]
-[0 3]]
-Precision : 1.0
-Recall : 1.0
-F1-Score : 1.0
-
-----------------------------
-Practical No. 9
-Aim: SVM
-
-Code:
-from sklearn.datasets import load_iris
-import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.svm import SVC
-from sklearn.metrics import precision_score, recall_score, f1_score
-if __name__ == '__main__':
-# Load the iris dataset
-iris = load_iris()
-X = np.array(iris.data)
-y = np.array(iris.target)
-# Split the dataset into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, shuffle=True, test_size=0.1)
-# Initialize and train the Support Vector Classifier (SVC)
-model = SVC()
-model.fit(X_train, y_train)
-# Predict labels for the test set
-y_hat = model.predict(X_test)
-# Calculate performance metrics using micro-averaging
-precision = precision_score(y_true=y_test, y_pred=y_hat, average='micro')
-recall = recall_score(y_true=y_test, y_pred=y_hat, average='micro')
-f1 = f1_score(y_true=y_test, y_pred=y_hat, average='micro')
-# Print the results
-print(f'Precision : {precision}')
-print(f'Recall : {recall}')
-print(f'F1-Score : {f1}')
-
-Output:
-
-Precision : 0.9333333333333333
-Recall : 0.9333333333333333
-F1-Score : 0.9333333333333333
-
-----------------------
-Practical No. 10
-Aim: Varied Algorithms
-
-Code:
-from sklearn.datasets import load_iris
-import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.naive_bayes import GaussianNB
-if __name__ == '__main__':
-# Load the iris dataset
-iris = load_iris()
-X = np.array(iris.data)
-y = np.array(iris.target)
-# Split the dataset into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, shuffle=True, test_size=0.1)
-# 1. Decision Tree Classifier
-dt = DecisionTreeClassifier()
-dt.fit(X_train, y_train)
-dt_pred = dt.predict([[1, 2, 3, 4]])
-print(f'Decision Tree : {dt_pred}')
-# 2. Random Forest Classifier
-rf = RandomForestClassifier()
-rf.fit(X_train, y_train)
-rf_pred = rf.predict([[1, 2, 3, 4]])
-print(f'Random Forest : {rf_pred}')
-# 3. K-Neighbors Classifier
-knn = KNeighborsClassifier()
-knn.fit(X_train, y_train)
-knn_pred = knn.predict([[1, 2, 3, 4]])
-print(f'KNN : {knn_pred}')
-# 4. Naive Bayes (GaussianNB)
-nb = GaussianNB()
-nb.fit(X_train, y_train)
-nb_pred = nb.predict([[1, 2, 3, 4]])
-print(f'Naive Bayes : {nb_pred}') 
-
-Output:
-
-Decision Tree : [2]
-Random Forest : [2]
-KNN : [1]
-Naive Bayes : [2]
-
------------------------------------------------------
-
-
-1 >> Implementation of Data Partitioning through Range
-
--- Step 1: Create Database
-CREATE DATABASE mca_db;
-USE mca_db;
-
--- Step 2: Create table with RANGE partition
+--------------------------------
+EXPERIMENT 4: PHP Insert & Display Data
+Database Table
 CREATE TABLE student (
-    roll_no INT NOT NULL,
-    name VARCHAR(50),
-    marks INT
-)
-PARTITION BY RANGE (roll_no) (
-    PARTITION p1 VALUES LESS THAN (101),
-    PARTITION p2 VALUES LESS THAN (201),
-    PARTITION p3 VALUES LESS THAN (301)
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(50),
+  email VARCHAR(50)
 );
 
--- Step 3: Insert data
-INSERT INTO student VALUES (10, 'Amit', 78);
-INSERT INTO student VALUES (120, 'Ravi', 85);
-INSERT INTO student VALUES (250, 'Neha', 92);
+insert.php
+<?php
+$conn = mysqli_connect("localhost","root","","test");
 
--- Step 4: View data
-SELECT * FROM student;
+mysqli_query($conn,
+"INSERT INTO student(name,email) VALUES('Rohan','rohan@gmail.com')");
 
-o/p
+$result = mysqli_query($conn,"SELECT * FROM student");
 
-	roll_no	name	marks
-	10	Amit	78
-	120	Ravi	85
-	250	Neha	92
+echo "<table border='1'>
+<tr><th>ID</th><th>Name</th><th>Email</th></tr>";
 
-
-[SELECT
-    PARTITION_NAME,
-    TABLE_ROWS
-FROM
-    INFORMATION_SCHEMA.PARTITIONS
-WHERE
-    TABLE_NAME = 'student';]
-
-    --------------------------
-
-2 >> Implementation of Analytical queries like Roll_UP, CUBE, First, Last
-
-
--- Step 1: Create Database
-CREATE DATABASE olap_db;
-USE olap_db;
-
--- Step 2: Create Table
-CREATE TABLE sales (
-    region VARCHAR(20),
-    product VARCHAR(20),
-    amount INT
+while($row = mysqli_fetch_assoc($result)) {
+  echo "<tr>
+        <td>{$row['id']}</td>
+        <td>{$row['name']}</td>
+        <td>{$row['email']}</td>
+        </tr>";
+}
+echo "</table>";
+?>
+------------------------------------
+EXPERIMENT 5: Two Tables (student & dept)
+SQL
+>>
+CREATE TABLE dept (
+  dept_id INT,
+  dept_name VARCHAR(50)
 );
 
--- Step 3: Insert Data
-INSERT INTO sales VALUES
-('North', 'Laptop', 50000),
-('North', 'Mobile', 20000),
-('South', 'Laptop', 45000),
-('South', 'Mobile', 25000),
-('East',  'Laptop', 40000),
-('East',  'Mobile', 15000);
+PHP (display both)
+>>
+$result1 = mysqli_query($conn,"SELECT * FROM student");
+$result2 = mysqli_query($conn,"SELECT * FROM dept");
 
+--------------------------------------
+EXPERIMENT 6: Country DB & City Table
+SQL
+>>
+CREATE DATABASE country;
+USE country;
 
--- Step 3: Check Table
-SELECT * FROM sales;
+CREATE TABLE city (
+  cityname VARCHAR(50),
+  area INT,
+  population INT
+);
 
+HTML Form
+>>
+<form action="insert.php" method="post">
+City: <input name="city"><br>
+Area: <input name="area"><br>
+Population: <input name="pop"><br>
+<input type="submit">
+</form>
 
---ROLLUP (Analytical Query)
-code :
-SELECT
-    region,
-    product,
-    SUM(amount) AS total_sales
-FROM sales
-GROUP BY region, product WITH ROLLUP;
+insert.php
+>>
+$conn = mysqli_connect("localhost","root","","country");
+mysqli_query($conn,
+"INSERT INTO city VALUES('$_POST[city]',$_POST[area],$_POST[pop])");
 
---CUBE (Analytical Query)
-code:
-SELECT
-    region,
-    product,
-    SUM(amount) AS total_sales
-FROM sales
-GROUP BY CUBE (region, product);
+----------------------------------------
+EXPERIMENT 7: React Component Life Cycle
+class Demo extends React.Component {
+  constructor() {
+    super();
+    console.log("Constructor");
+  }
 
---FIRST_VALUE (Analytical Function)
-code:
-SELECT
-    region,
-    product,
-    amount,
-    FIRST_VALUE(amount)
-    OVER (PARTITION BY region ORDER BY amount) AS first_sale
-FROM sales;
+  componentDidMount() {
+    console.log("Component Mounted");
+  }
 
---LAST_VALUE
-SELECT
-    region,
-    product,
-    amount,
-    LAST_VALUE(amount)
-    OVER (
-        PARTITION BY region
-        ORDER BY amount
-        ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
-    ) AS last_sale
-FROM sales;
+  render() {
+    return <h1>Hello</h1>;
+  }
+}
+----------------------------------
+EXPERIMENT 8: Light / Dark Mode (useState)
 
+import { useState } from "react";
 
+function Theme() {
+  const [dark, setDark] = useState(false);
 
------------------------------------
+  return (
+    <div style={{background: dark ? "black" : "white", color: dark ? "white" : "black"}}>
+      <button onClick={() => setDark(!dark)}>Toggle</button>
+    </div>
+  );
+}
+
+export default Theme;
+
+---------------------------------
+EXPERIMENT 9: Change Document Title
+
+import { useState, useEffect } from "react";
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    document.title = `You clicked ${count} times`;
+  }, [count]);
+
+  return <button onClick={() => setCount(count + 1)}>Click</button>;
+}
+
+-----------------------------------------
+EXPERIMENT 10: Multilingual App (useContext)
+
+import { createContext, useContext } from "react";
+
+const LangContext = createContext();
+
+function App() {
+  return (
+    <LangContext.Provider value="Hello">
+      <Child />
+    </LangContext.Provider>
+  );
+}
+
+function Child() {
+  const text = useContext(LangContext);
+  return <h1>{text}</h1>;
+}
