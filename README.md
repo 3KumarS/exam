@@ -1,3 +1,35 @@
+EXPERIMENT 1: Client–Server Communication
+
+Server (Using Python http.server)
+Step 1: Open terminal / CMD
+ python -m http.server 8000
+
+This starts a local server at:
+ http://localhost:8000
+
+Client (Browser)
+>Open browser
+>Visit: http://localhost:8000
+>Press F12 → Network tab → Refresh page
+
+Observation (Write in practical)
+
+>HTTP Method: GET
+
+>Status Code: 200 OK
+
+>Request Headers:
+    Host
+    User-Agent
+
+Response Headers:
+    Content-Type
+    Content-Length
+
+Explanation
+Browser acts as client, Python server acts as server. Browser sends HTTP request, server sends response.
+-----------------------------
+
 EXPERIMENT 2: HTML5 Page Creation
 
 Code (index.html)
